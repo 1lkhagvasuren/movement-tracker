@@ -1,0 +1,686 @@
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  --background: #f4f1eb;
+  --surface: rgba(255, 253, 248, 0.62);
+  --text: #242321;
+  --muted: #817b72;
+  --line: rgba(54, 49, 42, 0.14);
+  --accent: #a77a4b;
+  --accent-soft: rgba(167, 122, 75, 0.18);
+
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  background: var(--background);
+  color: var(--text);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* =========================================================
+   AMBIENT GEOMETRY
+   ========================================================= */
+
+.ambient-geometry {
+  position: absolute;
+  pointer-events: none;
+
+  border: 1px solid rgba(167, 122, 75, 0.12);
+  border-radius: 50%;
+}
+
+.geometry-one {
+  width: 420px;
+  height: 420px;
+
+  top: 100px;
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+.geometry-one::before,
+.geometry-one::after {
+  content: "";
+
+  position: absolute;
+  inset: 52px;
+
+  border: 1px solid rgba(167, 122, 75, 0.08);
+
+  transform: rotate(45deg);
+}
+
+.geometry-one::after {
+  transform: rotate(22.5deg);
+}
+
+.geometry-two {
+  width: 680px;
+  height: 680px;
+
+  top: -40px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  opacity: 0.5;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.top-bar {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 24px 24px 8px;
+}
+
+.mark {
+  position: relative;
+
+  width: 28px;
+  height: 28px;
+
+  transform: rotate(45deg);
+}
+
+.mark span {
+  position: absolute;
+  inset: 4px;
+
+  border: 1px solid var(--accent);
+}
+
+.mark span:nth-child(2) {
+  inset: 8px;
+}
+
+.mark span:nth-child(3) {
+  inset: 12px;
+}
+
+.settings-button {
+  position: relative;
+
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 0.55;
+
+  cursor: pointer;
+}
+
+.settings-button::before {
+  content: "⚙";
+
+  font-size: 20px;
+  color: var(--text);
+}
+
+/* =========================================================
+   MOVEMENT SELECTOR
+   ========================================================= */
+
+.movement-selector {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  margin: 18px 16px 0;
+
+  border: 1px solid var(--line);
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  background: rgba(255, 253, 248, 0.28);
+}
+
+.movement-tab {
+  position: relative;
+
+  min-height: 112px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  padding: 14px 8px;
+
+  border: 0;
+  border-right: 1px solid var(--line);
+
+  background: transparent;
+
+  color: var(--muted);
+
+  cursor: pointer;
+
+  transition:
+    color 240ms ease,
+    background 240ms ease;
+}
+
+.movement-tab:last-child {
+  border-right: 0;
+}
+
+.movement-tab.active {
+  color: var(--text);
+
+  background: rgba(167, 122, 75, 0.055);
+}
+
+.movement-tab.active::after {
+  content: "";
+
+  position: absolute;
+
+  width: 48px;
+  height: 2px;
+
+  bottom: 0;
+
+  background: var(--accent);
+}
+
+.movement-symbol {
+  font-size: 30px;
+  line-height: 1;
+
+  font-weight: 300;
+
+  opacity: 0.45;
+
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease;
+}
+
+.movement-tab.active .movement-symbol {
+  color: var(--accent);
+
+  opacity: 1;
+
+  transform: scale(1.08);
+}
+
+.movement-name {
+  font-size: 11px;
+
+  letter-spacing: 0.24em;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   COUNTER
+   ========================================================= */
+
+.counter-section {
+  position: relative;
+  z-index: 2;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px 32px 32px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+
+  letter-spacing: 0.34em;
+
+  font-weight: 500;
+}
+
+.set-count {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(64px, 18vw, 92px);
+
+  line-height: 0.95;
+
+  font-weight: 400;
+
+  letter-spacing: -0.045em;
+}
+
+.count-label {
+  margin: 12px 0 38px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+
+  letter-spacing: 0.36em;
+}
+
+/* =========================================================
+   BASELINE / TARGET
+   ========================================================= */
+
+.progress-structure {
+  width: min(280px, 78vw);
+}
+
+.progress-line {
+  width: 100%;
+  height: 2px;
+
+  overflow: hidden;
+
+  background: var(--line);
+}
+
+.progress-fill {
+  height: 100%;
+
+  background: var(--accent);
+
+  transition:
+    width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.thresholds {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 11px;
+}
+
+.thresholds div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  color: var(--muted);
+}
+
+.thresholds strong {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 18px;
+
+  font-weight: 400;
+}
+
+.thresholds span {
+  font-size: 8px;
+
+  letter-spacing: 0.16em;
+}
+
+.thresholds div:last-child {
+  text-align: right;
+}
+
+.thresholds .reached {
+  color: var(--accent);
+}
+
+/* =========================================================
+   PRIMARY ACTION
+   ========================================================= */
+
+.action-section {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 24px 34px;
+}
+
+.set-button {
+  width: min(220px, 70vw);
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  border: 1px solid rgba(167, 122, 75, 0.55);
+  border-radius: 18px;
+
+  background: rgba(255, 253, 248, 0.58);
+
+  color: var(--text);
+
+  font-size: 11px;
+
+  letter-spacing: 0.28em;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 35px rgba(45, 38, 30, 0.06);
+
+  transition:
+    transform 160ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.set-button:hover {
+  background: rgba(255, 253, 248, 0.9);
+
+  box-shadow:
+    0 15px 42px rgba(45, 38, 30, 0.09);
+}
+
+.set-button:active {
+  transform: scale(0.97);
+}
+
+.plus {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 27px;
+
+  font-weight: 300;
+
+  letter-spacing: 0;
+}
+
+/* =========================================================
+   UNDO
+   ========================================================= */
+
+.undo-container {
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  visibility: hidden;
+
+  opacity: 0;
+
+  transition:
+    opacity 180ms ease;
+}
+
+.undo-container.visible {
+  visibility: visible;
+
+  opacity: 1;
+}
+
+.undo-button {
+  border: 0;
+
+  background: transparent;
+
+  color: var(--muted);
+
+  font-size: 11px;
+
+  letter-spacing: 0.04em;
+
+  cursor: pointer;
+
+  padding: 4px 12px;
+}
+
+.undo-button:hover {
+  color: var(--text);
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottom-nav {
+  position: relative;
+  z-index: 4;
+
+  height: 82px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  align-items: center;
+
+  padding: 0 34px;
+
+  border-top: 1px solid var(--line);
+
+  background: rgba(244, 241, 235, 0.72);
+
+  backdrop-filter: blur(18px);
+}
+
+.nav-item {
+  justify-self: center;
+
+  width: 48px;
+  height: 48px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--muted);
+
+  cursor: pointer;
+}
+
+.nav-item-active {
+  display: grid;
+  place-items: center;
+}
+
+.nav-add {
+  width: 45px;
+  height: 45px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--accent);
+
+  border-radius: 50%;
+
+  color: var(--accent);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 28px;
+
+  font-weight: 300;
+}
+
+.bars {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+
+  gap: 3px;
+
+  height: 20px;
+}
+
+.bars i {
+  display: block;
+
+  width: 3px;
+
+  background: currentColor;
+
+  border-radius: 2px;
+}
+
+.bars i:nth-child(1) {
+  height: 9px;
+}
+
+.bars i:nth-child(2) {
+  height: 16px;
+}
+
+.bars i:nth-child(3) {
+  height: 12px;
+}
+
+.calendar {
+  position: relative;
+
+  display: block;
+
+  width: 18px;
+  height: 17px;
+
+  margin: auto;
+
+  border: 1px solid currentColor;
+
+  border-radius: 3px;
+}
+
+.calendar::before {
+  content: "";
+
+  position: absolute;
+
+  top: 4px;
+  left: 0;
+  right: 0;
+
+  border-top: 1px solid currentColor;
+}
+
+.calendar::after {
+  content: "";
+
+  position: absolute;
+
+  width: 3px;
+  height: 3px;
+
+  top: 7px;
+  left: 4px;
+
+  background: currentColor;
+
+  box-shadow:
+    6px 0 currentColor,
+    0 4px currentColor,
+    6px 4px currentColor;
+}
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+  .app {
+    --background: #11110f;
+    --surface: rgba(26, 25, 22, 0.68);
+    --text: #e9e4da;
+    --muted: #817c73;
+    --line: rgba(232, 225, 214, 0.12);
+    --accent: #c69a68;
+    --accent-soft: rgba(198, 154, 104, 0.18);
+  }
+
+  .movement-selector {
+    background: rgba(26, 25, 22, 0.38);
+  }
+
+  .movement-tab.active {
+    background: rgba(198, 154, 104, 0.055);
+  }
+
+  .set-button {
+    background: rgba(30, 29, 26, 0.62);
+
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.18);
+  }
+
+  .set-button:hover {
+    background: rgba(38, 36, 32, 0.82);
+  }
+
+  .bottom-nav {
+    background: rgba(17, 17, 15, 0.76);
+  }
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 700px) {
+  .app {
+    width: 430px;
+    min-height: 860px;
+    max-height: 100vh;
+
+    margin: 0 auto;
+
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+}
