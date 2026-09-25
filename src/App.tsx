@@ -5,6 +5,52 @@ type Movement = 'Push' | 'Pull' | 'Legs'
 
 const movements: Movement[] = ['Push', 'Pull', 'Legs']
 
+function MovementSymbol({ movement }: { movement: Movement }) {
+  return (
+    <span
+      className={`movement-symbol ${movement.toLowerCase()}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 40 40"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {movement === 'Push' && (
+          <polygon
+            points="20,5 36,35 4,35"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+            strokeLinejoin="round"
+          />
+        )}
+
+        {movement === 'Pull' && (
+          <polygon
+            points="4,5 36,5 20,35"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+            strokeLinejoin="round"
+          />
+        )}
+
+        {movement === 'Legs' && (
+          <rect
+            x="5"
+            y="5"
+            width="30"
+            height="30"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+          />
+        )}
+      </svg>
+    </span>
+  )
+}
+
 function App() {
   const [activeMovement, setActiveMovement] = useState<Movement>('Push')
 
@@ -32,11 +78,9 @@ function App() {
 
   return (
     <main className="app">
-      {/* Ambient geometric structure */}
       <div className="ambient-geometry geometry-one" />
       <div className="ambient-geometry geometry-two" />
 
-      {/* Header */}
       <header className="top-bar">
         <div className="mark" aria-hidden="true">
           <span />
@@ -53,7 +97,6 @@ function App() {
         </button>
       </header>
 
-      {/* Primary movement selector */}
       <section
         className="movement-selector"
         aria-label="Movement category"
@@ -61,20 +104,12 @@ function App() {
         {movements.map((movement) => (
           <button
             key={movement}
-            className={`movement-tab ${
-              activeMovement === movement ? 'active' : ''
-            }`}
+            className={`movement-tab ${activeMovement === movement ? 'active' : ''
+              }`}
             onClick={() => setActiveMovement(movement)}
             aria-pressed={activeMovement === movement}
           >
-            <span
-              className={`movement-symbol ${movement.toLowerCase()}`}
-              aria-hidden="true"
-            >
-              {movement === 'Push' && '△'}
-              {movement === 'Pull' && '▽'}
-              {movement === 'Legs' && '◇'}
-            </span>
+            <MovementSymbol movement={movement} />
 
             <span className="movement-name">
               {movement}
@@ -83,103 +118,83 @@ function App() {
         ))}
       </section>
 
-      {/* Current state */}
-      <section className="counter-section">
-        <p className="eyebrow">TODAY</p>
+      <section className="practice-stage">
+        <div className="counter-section">
+          <p className="eyebrow">TODAY</p>
 
-        <div
-          className="set-count"
-          aria-live="polite"
-          aria-label={`${currentSets} sets`}
-        >
-          {currentSets}
-        </div>
+          <div className="counter-value">
+            {currentSets === 0 ? (
+              <div
+                className="empty-state"
+                aria-label="No sets recorded"
+              >
+                —
+              </div>
+            ) : (
+              <>
+                <div
+                  className="set-count"
+                  aria-live="polite"
+                  aria-label={`${currentSets} sets`}
+                >
+                  {currentSets}
+                </div>
 
-        <p className="count-label">
-          {currentSets === 1 ? 'SET' : 'SETS'}
-        </p>
-
-        {/* Baseline / target structure */}
-        <div className="progress-structure">
-          <div className="progress-line">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${Math.min((currentSets / 5) * 100, 100)}%`,
-              }}
-            />
+                <p className="count-label">
+                  {currentSets === 1 ? 'SET' : 'SETS'}
+                </p>
+              </>
+            )}
           </div>
 
-          <div className="thresholds">
-            <div className={currentSets >= 3 ? 'reached' : ''}>
-              <strong>3</strong>
-              <span>BASELINE</span>
+          <div className="progress-structure">
+            <div className="progress-line">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${Math.min((currentSets / 5) * 100, 100)}%`,
+                }}
+              />
             </div>
 
-            <div className={currentSets >= 5 ? 'reached' : ''}>
-              <strong>5</strong>
-              <span>TARGET</span>
+            <div className="thresholds">
+              <div className={currentSets >= 3 ? 'reached' : ''}>
+                <strong>3</strong>
+                <span>BASELINE</span>
+              </div>
+
+              <div className={currentSets >= 5 ? 'reached' : ''}>
+                <strong>5</strong>
+                <span>TARGET</span>
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Primary action */}
-      <section className="action-section">
-        <button
-          className="set-button"
-          onClick={addSet}
-          aria-label={`Add one ${activeMovement} set`}
-        >
-          <span className="plus">+</span>
-          <span>SET</span>
-        </button>
-
-        {/* Reserved space prevents layout movement */}
-        <div
-          className={`undo-container ${
-            currentSets > 0 ? 'visible' : ''
-          }`}
-        >
+        <section className="action-section">
           <button
-            className="undo-button"
-            onClick={undoSet}
-            tabIndex={currentSets > 0 ? 0 : -1}
+            className="set-button"
+            onClick={addSet}
+            aria-label={`Add one ${activeMovement} set`}
           >
-            Undo
+            <span className="plus">+</span>
+            <span>SET</span>
           </button>
-        </div>
+
+          <div
+            className={`undo-container ${currentSets > 0 ? 'visible' : ''
+              }`}
+          >
+            <button
+              className="undo-button"
+              onClick={undoSet}
+              tabIndex={currentSets > 0 ? 0 : -1}
+            >
+              Undo
+            </button>
+          </div>
+        </section>
       </section>
-
-      {/* Bottom navigation */}
-      <nav className="bottom-nav" aria-label="Main navigation">
-        <button
-          className="nav-item"
-          aria-label="History"
-        >
-          <span className="nav-icon bars" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-        </button>
-
-        <button
-          className="nav-item nav-item-active"
-          aria-label="Add"
-        >
-          <span className="nav-add">+</span>
-        </button>
-
-        <button
-          className="nav-item"
-          aria-label="Records"
-        >
-          <span className="nav-icon calendar" aria-hidden="true">
-            <i />
-          </span>
-        </button>
-      </nav>
     </main>
   )
 }

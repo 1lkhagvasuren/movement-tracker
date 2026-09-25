@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
+
 #root {
   min-height: 100vh;
 }
@@ -214,16 +216,35 @@
 }
 
 .movement-symbol {
-  font-size: 30px;
-  line-height: 1;
+  width: 40px;
+  height: 40px;
 
-  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--muted);
 
   opacity: 0.45;
 
   transition:
     opacity 240ms ease,
     transform 240ms ease;
+}
+
+.movement-symbol svg {
+  display: block;
+
+  width: 40px;
+  height: 40px;
+}
+
+.movement-tab.active .movement-symbol {
+  color: var(--accent);
+
+  opacity: 1;
+
+  transform: scale(1.08);
 }
 
 .movement-tab.active .movement-symbol {
@@ -243,25 +264,40 @@
 }
 
 /* =========================================================
-   COUNTER
+   PRACTICE STAGE
    ========================================================= */
 
-.counter-section {
+.practice-stage {
   position: relative;
   z-index: 2;
 
   flex: 1;
 
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+}
 
-  padding: 20px 32px 32px;
+/* =========================================================
+   COUNTER
+   ========================================================= */
+
+.counter-section {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 0 32px;
+
+  margin-top: clamp(135px, 18vh, 180px);
 }
 
 .eyebrow {
-  margin: 0 0 4px;
+  margin: 0;
 
   color: var(--muted);
 
@@ -272,8 +308,19 @@
   font-weight: 500;
 }
 
+.counter-value {
+  width: 100%;
+  height: 132px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .set-count {
   font-family:
+    "Source Serif 4",
     Georgia,
     "Times New Roman",
     serif;
@@ -285,10 +332,16 @@
   font-weight: 400;
 
   letter-spacing: -0.045em;
+
+  /*
+    Optical correction: the numeral glyphs carry
+    slightly more visual weight on their right side.
+  */
+  transform: translateX(-4px);
 }
 
 .count-label {
-  margin: 12px 0 38px;
+  margin: 12px 0 0;
 
   color: var(--muted);
 
@@ -297,12 +350,41 @@
   letter-spacing: 0.36em;
 }
 
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  color: var(--muted);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 58px;
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  letter-spacing: -0.04em;
+
+  transform: translateX(-2px);
+
+  user-select: none;
+}
+
 /* =========================================================
    BASELINE / TARGET
    ========================================================= */
 
 .progress-structure {
   width: min(280px, 78vw);
+
+  margin-top: 0;
 }
 
 .progress-line {
@@ -369,16 +451,15 @@
    ========================================================= */
 
 .action-section {
-  position: relative;
-  z-index: 3;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  gap: 12px;
+  margin-top: auto;
 
-  padding: 0 24px 34px;
+  padding: 0 24px 62px;
 }
 
 .set-button {
@@ -444,11 +525,15 @@
    ========================================================= */
 
 .undo-container {
-  height: 21px;
+  width: 100%;
+
+  height: 48px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  margin-top: 12px;
 
   visibility: hidden;
 
@@ -465,6 +550,15 @@
 }
 
 .undo-button {
+  min-width: 88px;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 16px;
+
   border: 0;
 
   background: transparent;
@@ -476,157 +570,10 @@
   letter-spacing: 0.04em;
 
   cursor: pointer;
-
-  padding: 4px 12px;
 }
 
 .undo-button:hover {
   color: var(--text);
-}
-
-/* =========================================================
-   BOTTOM NAVIGATION
-   ========================================================= */
-
-.bottom-nav {
-  position: relative;
-  z-index: 4;
-
-  height: 82px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-
-  align-items: center;
-
-  padding: 0 34px;
-
-  border-top: 1px solid var(--line);
-
-  background: rgba(244, 241, 235, 0.72);
-
-  backdrop-filter: blur(18px);
-}
-
-.nav-item {
-  justify-self: center;
-
-  width: 48px;
-  height: 48px;
-
-  border: 0;
-
-  background: transparent;
-
-  color: var(--muted);
-
-  cursor: pointer;
-}
-
-.nav-item-active {
-  display: grid;
-  place-items: center;
-}
-
-.nav-add {
-  width: 45px;
-  height: 45px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid var(--accent);
-
-  border-radius: 50%;
-
-  color: var(--accent);
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 28px;
-
-  font-weight: 300;
-}
-
-.bars {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-
-  gap: 3px;
-
-  height: 20px;
-}
-
-.bars i {
-  display: block;
-
-  width: 3px;
-
-  background: currentColor;
-
-  border-radius: 2px;
-}
-
-.bars i:nth-child(1) {
-  height: 9px;
-}
-
-.bars i:nth-child(2) {
-  height: 16px;
-}
-
-.bars i:nth-child(3) {
-  height: 12px;
-}
-
-.calendar {
-  position: relative;
-
-  display: block;
-
-  width: 18px;
-  height: 17px;
-
-  margin: auto;
-
-  border: 1px solid currentColor;
-
-  border-radius: 3px;
-}
-
-.calendar::before {
-  content: "";
-
-  position: absolute;
-
-  top: 4px;
-  left: 0;
-  right: 0;
-
-  border-top: 1px solid currentColor;
-}
-
-.calendar::after {
-  content: "";
-
-  position: absolute;
-
-  width: 3px;
-  height: 3px;
-
-  top: 7px;
-  left: 4px;
-
-  background: currentColor;
-
-  box-shadow:
-    6px 0 currentColor,
-    0 4px currentColor,
-    6px 4px currentColor;
 }
 
 /* =========================================================
@@ -662,10 +609,6 @@
   .set-button:hover {
     background: rgba(38, 36, 32, 0.82);
   }
-
-  .bottom-nav {
-    background: rgba(17, 17, 15, 0.76);
-  }
 }
 
 /* =========================================================
@@ -675,7 +618,9 @@
 @media (min-width: 700px) {
   .app {
     width: 430px;
+
     min-height: 860px;
+
     max-height: 100vh;
 
     margin: 0 auto;
