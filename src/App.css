@@ -1,631 +1,594 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
 
+:root {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
 #root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
   min-height: 100vh;
+  background: #f4f1eb;
+}
+
+button {
+  font: inherit;
 }
 
 .app {
   --background: #f4f1eb;
-  --surface: rgba(255, 253, 248, 0.62);
   --text: #242321;
   --muted: #817b72;
   --line: rgba(54, 49, 42, 0.14);
   --accent: #a77a4b;
-  --accent-soft: rgba(167, 122, 75, 0.18);
 
   position: relative;
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-
+  isolation: isolate;
+  padding:
+    clamp(20px, 3.5vh, 40px)
+    clamp(18px, 4vw, 64px)
+    clamp(24px, 4vh, 42px);
   background: var(--background);
   color: var(--text);
-
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
 }
 
-/* =========================================================
-   AMBIENT GEOMETRY
-   ========================================================= */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #11110f;
+  }
 
-.ambient-geometry {
-  position: absolute;
-  pointer-events: none;
-
-  border: 1px solid rgba(167, 122, 75, 0.12);
-  border-radius: 50%;
+  .app {
+    --background: #11110f;
+    --text: #e9e4da;
+    --muted: #817c73;
+    --line: rgba(232, 225, 214, 0.12);
+    --accent: #c69a68;
+  }
 }
 
-.geometry-one {
-  width: 420px;
-  height: 420px;
-
-  top: 100px;
-  left: 50%;
-
-  transform: translateX(-50%);
-}
-
-.geometry-one::before,
-.geometry-one::after {
-  content: "";
-
-  position: absolute;
-  inset: 52px;
-
-  border: 1px solid rgba(167, 122, 75, 0.08);
-
-  transform: rotate(45deg);
-}
-
-.geometry-one::after {
-  transform: rotate(22.5deg);
-}
-
-.geometry-two {
-  width: 680px;
-  height: 680px;
-
-  top: -40px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  opacity: 0.5;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Header
+   ───────────────────────────────────────── */
 
 .top-bar {
   position: relative;
   z-index: 2;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  padding: 24px 24px 8px;
+  width: min(100%, 760px);
+  margin: 0 auto;
 }
 
 .mark {
   position: relative;
-
-  width: 28px;
-  height: 28px;
-
-  transform: rotate(45deg);
+  width: 34px;
+  height: 34px;
 }
 
 .mark span {
   position: absolute;
-  inset: 4px;
-
-  border: 1px solid var(--accent);
+  top: 50%;
+  left: 50%;
+  width: 19px;
+  height: 19px;
+  border: 1.4px solid currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .mark span:nth-child(2) {
-  inset: 8px;
+  width: 13px;
+  height: 13px;
 }
 
 .mark span:nth-child(3) {
-  inset: 12px;
+  width: 7px;
+  height: 7px;
 }
 
 .settings-button {
-  position: relative;
-
-  width: 36px;
-  height: 36px;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   padding: 0;
-
   border: 0;
   background: transparent;
-
-  opacity: 0.55;
-
+  color: var(--muted);
   cursor: pointer;
+  opacity: 0.85;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
 }
 
-.settings-button::before {
-  content: "⚙";
-
-  font-size: 20px;
+.settings-button:hover {
   color: var(--text);
+  opacity: 1;
 }
 
-/* =========================================================
-   MOVEMENT SELECTOR
-   ========================================================= */
+.settings-button span {
+  position: absolute;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+}
+
+.settings-button span:first-child {
+  transform: translateY(-4px);
+}
+
+.settings-button span:last-child {
+  transform: translateY(4px);
+}
+
+/* ─────────────────────────────────────────
+   Movement selector
+   ───────────────────────────────────────── */
 
 .movement-selector {
   position: relative;
   z-index: 2;
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
-  margin: 18px 16px 0;
-
+  width: min(100%, 760px);
+  min-height: clamp(104px, 13vh, 128px);
+  margin: clamp(28px, 4vh, 40px) auto 0;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 20px;
-
-  overflow: hidden;
-
-  background: rgba(255, 253, 248, 0.28);
 }
 
 .movement-tab {
-  position: relative;
-
-  min-height: 112px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  gap: 12px;
-
-  padding: 14px 8px;
-
+  gap: 10px;
+  min-width: 0;
+  padding: 18px 10px;
   border: 0;
   border-right: 1px solid var(--line);
-
   background: transparent;
-
   color: var(--muted);
-
   cursor: pointer;
-
   transition:
-    color 240ms ease,
-    background 240ms ease;
+    color 180ms ease,
+    background 180ms ease;
 }
 
 .movement-tab:last-child {
   border-right: 0;
 }
 
-.movement-tab.active {
+.movement-tab:hover {
   color: var(--text);
-
-  background: rgba(167, 122, 75, 0.055);
 }
 
-.movement-tab.active::after {
-  content: "";
-
-  position: absolute;
-
-  width: 48px;
-  height: 2px;
-
-  bottom: 0;
-
-  background: var(--accent);
+.movement-tab.active {
+  background: rgba(167, 122, 75, 0.055);
+  color: var(--muted);
 }
 
 .movement-symbol {
-  width: 40px;
-  height: 40px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  color: var(--muted);
-
-  opacity: 0.45;
-
+  width: 40px;
+  height: 40px;
+  color: currentColor;
   transition:
-    opacity 240ms ease,
-    transform 240ms ease;
+    color 180ms ease,
+    transform 220ms ease;
 }
 
 .movement-symbol svg {
   display: block;
-
   width: 40px;
   height: 40px;
 }
 
 .movement-tab.active .movement-symbol {
   color: var(--accent);
-
-  opacity: 1;
-
-  transform: scale(1.08);
-}
-
-.movement-tab.active .movement-symbol {
-  color: var(--accent);
-
-  opacity: 1;
-
   transform: scale(1.08);
 }
 
 .movement-name {
   font-size: 11px;
-
-  letter-spacing: 0.24em;
-
   font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-/* =========================================================
-   PRACTICE STAGE
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Practice stage
+   ───────────────────────────────────────── */
 
 .practice-stage {
-  position: relative;
-  z-index: 2;
-
-  flex: 1;
-
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: static;
+  width: min(100%, 760px);
+  margin: 0 auto;
 }
 
-/* =========================================================
-   COUNTER
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Counter
+   ───────────────────────────────────────── */
+
+.counter-viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.counter-track {
+  display: flex;
+  width: 300%;
+  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+.counter-panel {
+  width: 33.333333%;
+  flex: 0 0 33.333333%;
+  min-width: 0;
+}
 
 .counter-section {
   width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  padding: 0 32px;
-
-  margin-top: clamp(135px, 18vh, 180px);
+  margin-top: clamp(105px, 16vh, 180px);
 }
 
 .eyebrow {
   margin: 0;
-
   color: var(--muted);
-
   font-size: 10px;
-
-  letter-spacing: 0.34em;
-
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-align: center;
 }
 
 .counter-value {
-  width: 100%;
-  height: 132px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: clamp(116px, 15vh, 132px);
+  margin-top: 12px;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(52px, 7vw, 58px);
+  font-weight: 400;
+  line-height: 1;
+  transform: translateX(-2px);
 }
 
 .set-count {
-  font-family:
-    "Source Serif 4",
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: clamp(64px, 18vw, 92px);
-
-  line-height: 0.95;
-
+  color: var(--text);
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-size: clamp(64px, 9vw, 92px);
   font-weight: 400;
-
   letter-spacing: -0.045em;
-
-  /*
-    Optical correction: the numeral glyphs carry
-    slightly more visual weight on their right side.
-  */
+  line-height: 0.95;
   transform: translateX(-4px);
 }
 
 .count-label {
-  margin: 12px 0 0;
-
+  margin: 7px 0 0;
   color: var(--muted);
-
   font-size: 10px;
-
-  letter-spacing: 0.36em;
-}
-
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 100%;
-
-  color: var(--muted);
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 58px;
-
+  font-weight: 600;
+  letter-spacing: 0.2em;
   line-height: 1;
-
-  font-weight: 400;
-
-  letter-spacing: -0.04em;
-
-  transform: translateX(-2px);
-
-  user-select: none;
 }
 
-/* =========================================================
-   BASELINE / TARGET
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Progress structure
+   ───────────────────────────────────────── */
 
 .progress-structure {
-  width: min(280px, 78vw);
-
-  margin-top: 0;
+  width: min(100%, 360px);
+  margin: 18px auto 0;
 }
 
 .progress-line {
   width: 100%;
-  height: 2px;
-
+  height: 1px;
   overflow: hidden;
-
   background: var(--line);
 }
 
 .progress-fill {
   height: 100%;
-
   background: var(--accent);
-
-  transition:
-    width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 300ms ease;
 }
 
 .thresholds {
   display: flex;
   justify-content: space-between;
-
-  margin-top: 11px;
+  margin-top: 10px;
 }
 
-.thresholds div {
+.thresholds > div {
   display: flex;
   flex-direction: column;
-
   gap: 3px;
+}
 
-  color: var(--muted);
+.thresholds > div:last-child {
+  align-items: flex-end;
 }
 
 .thresholds strong {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 18px;
-
+  color: var(--muted);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 15px;
   font-weight: 400;
+  line-height: 1;
+  transition: color 180ms ease;
 }
 
 .thresholds span {
+  color: var(--muted);
   font-size: 8px;
-
-  letter-spacing: 0.16em;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  transition: color 180ms ease;
 }
 
-.thresholds div:last-child {
-  text-align: right;
-}
-
-.thresholds .reached {
+.thresholds .reached strong,
+.thresholds .reached span {
   color: var(--accent);
 }
 
-/* =========================================================
-   PRIMARY ACTION
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Primary action
+   ───────────────────────────────────────── */
 
 .action-section {
-  width: 100%;
-
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: clamp(24px, 5vh, 48px);
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin-top: auto;
-
-  padding: 0 24px 62px;
 }
 
 .set-button {
-  width: min(220px, 70vw);
-  height: 72px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  gap: 10px;
-
-  border: 1px solid rgba(167, 122, 75, 0.55);
-  border-radius: 18px;
-
-  background: rgba(255, 253, 248, 0.58);
-
-  color: var(--text);
-
-  font-size: 11px;
-
-  letter-spacing: 0.28em;
-
-  font-weight: 600;
-
+  gap: 9px;
+  width: 220px;
+  height: 72px;
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fffaf2;
   cursor: pointer;
-
-  box-shadow:
-    0 12px 35px rgba(45, 38, 30, 0.06);
-
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   transition:
-    transform 160ms ease,
-    background 200ms ease,
-    box-shadow 200ms ease;
+    transform 150ms ease,
+    opacity 150ms ease;
 }
 
 .set-button:hover {
-  background: rgba(255, 253, 248, 0.9);
-
-  box-shadow:
-    0 15px 42px rgba(45, 38, 30, 0.09);
+  opacity: 0.94;
 }
 
 .set-button:active {
-  transform: scale(0.97);
+  transform: scale(0.985);
 }
 
 .plus {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 27px;
-
+  font-size: 20px;
   font-weight: 300;
-
-  letter-spacing: 0;
+  line-height: 1;
+  margin-top: -1px;
 }
 
-/* =========================================================
-   UNDO
-   ========================================================= */
-
 .undo-container {
-  width: 100%;
-
-  height: 48px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
+  width: 120px;
+  height: 48px;
   margin-top: 12px;
-
-  visibility: hidden;
-
-  opacity: 0;
-
-  transition:
-    opacity 180ms ease;
-}
-
-.undo-container.visible {
-  visibility: visible;
-
-  opacity: 1;
 }
 
 .undo-button {
   min-width: 88px;
   min-height: 44px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 8px 16px;
-
+  padding: 8px 14px;
   border: 0;
-
   background: transparent;
-
   color: var(--muted);
-
-  font-size: 11px;
-
-  letter-spacing: 0.04em;
-
   cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.undo-container.visible .undo-button {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .undo-button:hover {
   color: var(--text);
 }
 
-/* =========================================================
-   DARK THEME
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Focus
+   ───────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  .app {
-    --background: #11110f;
-    --surface: rgba(26, 25, 22, 0.68);
-    --text: #e9e4da;
-    --muted: #817c73;
-    --line: rgba(232, 225, 214, 0.12);
-    --accent: #c69a68;
-    --accent-soft: rgba(198, 154, 104, 0.18);
-  }
+button:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
 
+/* ─────────────────────────────────────────
+   Compact height
+   ───────────────────────────────────────── */
+
+@media (max-height: 700px) {
   .movement-selector {
-    background: rgba(26, 25, 22, 0.38);
+    margin-top: 24px;
   }
 
-  .movement-tab.active {
-    background: rgba(198, 154, 104, 0.055);
+  .counter-section {
+    margin-top: 80px;
   }
 
-  .set-button {
-    background: rgba(30, 29, 26, 0.62);
-
-    box-shadow:
-      0 16px 40px rgba(0, 0, 0, 0.18);
+  .counter-value {
+    height: 112px;
   }
 
-  .set-button:hover {
-    background: rgba(38, 36, 32, 0.82);
+  .action-section {
+    bottom: 18px;
   }
 }
 
-/* =========================================================
-   DESKTOP
-   ========================================================= */
+/* ─────────────────────────────────────────
+   Small width
+   ───────────────────────────────────────── */
 
-@media (min-width: 700px) {
+@media (max-width: 500px) {
   .app {
-    width: 430px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
 
-    min-height: 860px;
+  .movement-selector {
+    min-height: 104px;
+    border-radius: 18px;
+  }
 
-    max-height: 100vh;
+  .movement-tab {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
 
-    margin: 0 auto;
+  .set-button {
+    width: min(220px, calc(100vw - 64px));
+  }
 
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
+  .progress-structure {
+    width: min(100%, 280px);
+  }
+}
+
+/* ─────────────────────────────────────────
+   Very small / short devices
+   ───────────────────────────────────────── */
+
+@media (max-width: 360px), (max-height: 620px) {
+  .app {
+    padding-top: 16px;
+    padding-bottom: 18px;
+  }
+
+  .movement-selector {
+    margin-top: 20px;
+    min-height: 96px;
+  }
+
+  .movement-symbol {
+    width: 36px;
+    height: 36px;
+  }
+
+  .movement-symbol svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .movement-name {
+    font-size: 10px;
+  }
+
+  .counter-section {
+    margin-top: 64px;
+  }
+
+  .counter-value {
+    height: 100px;
+  }
+
+  .action-section {
+    bottom: 14px;
+  }
+
+  .set-button {
+    height: 64px;
+  }
+}
+
+/* ─────────────────────────────────────────
+   Movement switch feedback
+   ───────────────────────────────────────── */
+
+.movement-switched {
+  animation: movement-switch 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes movement-switch {
+  0% {
+    transform: translateY(3px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────
+   Reduced motion
+   ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .movement-switched {
+    animation: none;
+  }
+
+  .counter-track {
+    transition: none;
+  }
+
+  .movement-symbol {
+    transition: color 180ms ease;
   }
 }

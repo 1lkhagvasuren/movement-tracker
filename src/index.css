@@ -3,14 +3,22 @@
 }
 
 html,
-body {
-  margin: 0;
+body,
+#root {
+  width: 100%;
   min-width: 320px;
   min-height: 100%;
+  margin: 0;
+}
+
+html {
+  min-height: 100%;
+  background: #f4f1eb;
 }
 
 body {
   min-height: 100vh;
+  background: #f4f1eb;
 }
 
 button {
@@ -21,4 +29,12 @@ button {
 button:focus-visible {
   outline: 2px solid #a77a4b;
   outline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  body,
+  #root {
+    background: #11110f;
+  }
 }
